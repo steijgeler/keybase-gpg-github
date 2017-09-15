@@ -106,12 +106,14 @@ Link pinentry and agent together:
 ```console
 $ vim ~/.profile # or other file that is sourced every time
 # Paste these lines:
-if test -f ~/.gnupg/.gpg-agent-info -a -n "$(pgrep gpg-agent)"; then
-  source ~/.gnupg/.gpg-agent-info
-  export GPG_AGENT_INFO
-else
-  eval $(gpg-agent --daemon --write-env-file ~/.gnupg/.gpg-agent-info)
+
+# Automatically sign git commits using GPG key
+if ! [ -f ~/.gnupg/.gpg-agent-info ] || ! [ -n "$(pgrep gpg-agent)" ]; then
+    eval $(gpg-agent --daemon --write-env-file ~/.gnupg/.gpg-agent-info)
 fi
+
+source ~/.gnupg/.gpg-agent-info
+export GPG_AGENT_INFO
 ```
 
 Now `git commit -S`, it will ask your password and you can save it to OSX
